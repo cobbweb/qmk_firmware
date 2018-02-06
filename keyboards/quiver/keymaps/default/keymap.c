@@ -19,6 +19,7 @@
 #define _BL 0
 #define _L0 1
 #define _L1 2
+#define _L2 3
 
 #define LCPO_KEY KC_9
 #define RCPC_KEY KC_0
@@ -33,30 +34,39 @@ enum my_keycodes {
   KC_ALTTAB,
   KC_ALTGRV,
   KC_ENTFN = LT(_L0, KC_ENT),
-  KC_SPCFN = LT(_L0, KC_SPC)
+  KC_SPCFN = LT(_L0, KC_SPC),
+  KC_LCBRFN = LT(_L2, KC_LCBR),
+  KC_RCBRFN = LT(_L2, KC_RCBR)
 };
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_BL] = KEYMAP( /* Base */ \
-  KC_LCBR, KC_Q, KC_W, KC_E, KC_R, KC_T,   KC_Y,   KC_U,   KC_I,     KC_O,    KC_P,    KC_RCBR, \
-  KC_LCPO, F(0), KC_S, KC_D, KC_F, KC_G, KC_H,   KC_J,   KC_K,     KC_L,   KC_SCLN,  KC_RCPC, \
-  SFT_T(KC_LBRC), KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N,   KC_M,  KC_COMM,  KC_DOT,  KC_SLSH,  SFT_T(KC_RBRC), \
-  ALT_T(KC_TAB), GUI_T(KC_BSPC), KC_SPCFN, KC_ENTFN,   GUI_T(KC_DEL),   ALT_T(KC_ESC) \
+  KC_LCBRFN,    KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,    KC_O,   KC_P,     KC_RCBRFN, \
+  KC_LCPO,      F(0),     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,    KC_L,   KC_SCLN,  KC_RCPC, \
+ SFT_T(KC_LBRC), KC_Z,    KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM, KC_DOT, KC_SLSH,  SFT_T(KC_RBRC), \
+                ALT_T(KC_TAB), GUI_T(KC_BSPC), KC_SPCFN,                KC_ENTFN,   GUI_T(KC_DEL),   ALT_T(KC_ESC) \
 ),
 
 [_L0] = KEYMAP( /* Fn0 Layer */ \
-  KC_GRAVE, KC_EXLM, KC_AT, KC_HASH, KC_DLR, KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_MINS, KC_EQL, KC_QUOT, \
-  _______, _______, KC_HOME, KC_PGUP, KC_PGDN, KC_END, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, RSFT(KC_QUOT), _______, \
-  _______, _______, _______, _______, KC_ALTGRV, KC_ALTTAB, _______, _______, _______, _______, KC_BSLASH, _______, \
-    _______, _______, _______, _______, _______, _______ \
+  KC_GRAVE,   KC_EXLM,    KC_AT,  KC_HASH,  KC_DLR,   KC_PERC,  KC_CIRC,  KC_AMPR,  KC_ASTR, KC_MINS, KC_EQL,     KC_QUOT, \
+  _______,    _______,  KC_HOME,  KC_PGUP, KC_PGDN,   KC_END,   KC_LEFT,  KC_DOWN,  KC_UP,  KC_RIGHT, RSFT(KC_QUOT), _______, \
+  _______,    _______,  _______,  _______, KC_ALTGRV, KC_ALTTAB, _______, KC_UNDS,  _______, _______, KC_BSLASH,  _______, \
+                                  _______, _______, _______,        _______, _______, _______ \
 ),
 
 [_L1] = KEYMAP( /* Fn1 Layer */ \
-  _______, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_EQL, KC_CIRC, \
-  _______, _______, _______, _______, _______, KC_LPRN, KC_RPRN, KC_4, KC_5, KC_6, KC_MINS, KC_PLUS, \
-  _______, _______, _______, _______, _______, _______, KC_0, KC_1, KC_2, KC_3, KC_SLSH, KC_ASTR, \
-    _______, _______, _______, _______, _______, _______ \
+  _______, _______,  _______,  _______,  _______,  _______,  _______,     KC_7,     KC_8,     KC_9,   KC_EQL,     KC_CIRC, \
+  _______, _______,  _______,  _______,  _______,  KC_LPRN,  KC_RPRN,     KC_4,     KC_5,     KC_6,   KC_MINS,    KC_PLUS, \
+  _______, _______,  _______,  _______,  _______,  _______,     KC_0,     KC_1,     KC_2,     KC_3,   KC_SLSH,    KC_ASTR, \
+                              _______, _______, _______,            _______, KC_DOT, _______ \
+),
+
+[_L2] = KEYMAP( /* Fn1 Layer */ \
+  _______,   KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F,     KC_F9,    KC_F10,     _______, \
+  KC_CAPS, _______,  _______,  _______,  _______,  _______,  _______,   KC_MPLY,   KC_MUTE,     KC_6,   KC_MINS,    KC_PLUS, \
+  _______, _______,  _______,  _______,  _______,  _______,     KC_0,     KC_1,     KC_2,     KC_3,   KC_SLSH,    KC_ASTR, \
+                              KC_MPRV, _______, KC_VOLD,            KC_VOLU, _______, KC_MNXT \
 )
 
         
@@ -82,6 +92,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
                    
     case KC_SPCFN: {
+       if (!record->event.pressed && alt_holding) {
+         unregister_mods(MOD_BIT(KC_LALT));
+         alt_holding = 0;
+         
+       }
+       return true;
+    }
+                   
+    case KC_LCBRFN: {
+       if (!record->event.pressed && alt_holding) {
+         unregister_mods(MOD_BIT(KC_LALT));
+         alt_holding = 0;
+         
+       }
+       return true;
+    }
+                   
+    case KC_RCBRFN: {
        if (!record->event.pressed && alt_holding) {
          unregister_mods(MOD_BIT(KC_LALT));
          alt_holding = 0;
