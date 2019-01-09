@@ -41,7 +41,7 @@ enum my_keycodes {
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  
+
 [_BL] = KEYMAP( /* Base */ \
   KC_LCBRFN,     KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,    KC_O,   KC_P,     KC_RCBRFN, \
   KC_LCPO,       KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,    KC_L,   KC_SCLN,  KC_RCPC, \
@@ -52,7 +52,7 @@ SFT_T(KC_LBRC), KC_NUMZ,   KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_
 [_ENTFN] = KEYMAP( /* ENTFN Layer */ \
   KC_GRAVE,   KC_EXLM,    KC_AT,  KC_HASH,  KC_DLR,   KC_PERC,  KC_CIRC,  KC_AMPR,  KC_ASTR, KC_MINS, KC_EQL,     KC_QUOT, \
   _______,    _______,  KC_HOME,  KC_PGUP, KC_PGDN,   KC_END,   KC_LEFT,  KC_DOWN,  KC_UP,  KC_RIGHT, RSFT(KC_QUOT), _______, \
-  _______,    _______,  _______,  _______, KC_ALTGRV, KC_ALTTAB, _______, KC_UNDS,  _______, _______, KC_BSLASH,  _______, \
+  _______,    KC_SLCK,  KC_NLCK,   KC_KVM, KC_ALTGRV, KC_ALTTAB, _______, KC_UNDS,  _______, _______, KC_BSLASH,  _______, \
                                   _______, _______, KC_SPC,        _______, _______, _______ \
 ),
 
@@ -90,11 +90,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
        if (!record->event.pressed && alt_holding) {
          unregister_mods(MOD_BIT(KC_LALT));
          alt_holding = 0;
-         
+
        }
        return true;
     }
-                   
+
     case KC_SPCFN: {
        if (!record->event.pressed && alt_holding) {
          unregister_mods(MOD_BIT(KC_LALT));
@@ -102,13 +102,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
        }
        return true;
     }
-                   
+
     case KC_LCBRFN: {
        if (!record->event.pressed && alt_holding) {
          unregister_mods(MOD_BIT(KC_LALT));
          alt_holding = 0;
        }
-      
+
        if (record->event.pressed) {
          ltcb_timer[0] = timer_read();
          layer_on(_FNS);
@@ -121,17 +121,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
            unregister_mods(MOD_BIT(KC_LSFT));
          }
        }
-       
+
        return false;
     }
-                   
+
     case KC_RCBRFN: {
        if (!record->event.pressed && alt_holding) {
          unregister_mods(MOD_BIT(KC_LALT));
          alt_holding = 0;
-         
+
        }
-      
+
        if (record->event.pressed) {
          ltcb_timer[1] = timer_read();
          layer_on(_FNS);
@@ -144,11 +144,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
            unregister_mods(MOD_BIT(KC_LSFT));
          }
        }
-       
+
        return false;
     }
-                   
-    case KC_ALTTAB: { 
+
+    case KC_ALTTAB: {
       if (!alt_holding) {
         register_mods(MOD_BIT(KC_LALT));
         alt_holding = 1;
@@ -159,8 +159,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
     }
-                   
-    case KC_ALTGRV: { 
+
+    case KC_ALTGRV: {
       if (!alt_holding) {
         register_mods(MOD_BIT(KC_LALT));
         alt_holding = 1;
@@ -171,7 +171,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
     }
-                    
+
     case KC_LCPO: {
       if (record->event.pressed) {
         scs_timer[0] = timer_read();
@@ -203,19 +203,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
     }
-                  
+
     case KC_KVM: {
       if (record->event.pressed) {
         SEND_STRING(SS_TAP(X_SCROLLLOCK)SS_TAP(X_SCROLLLOCK)SS_TAP(X_ENTER));
       }
       return false;
     }
-                  
+
     default: {
       break;
     }
   }
-  
+
   return true;
 }
 
